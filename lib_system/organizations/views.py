@@ -8,7 +8,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def perform_create(self, serializer):
-        # Ensure that the user is set to inactive until they confirm their email if that's a requirement
         serializer.save(is_active=True)
 
 class OrganizationViewSet(viewsets.ModelViewSet):
