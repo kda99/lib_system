@@ -12,3 +12,6 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
+
+    def preview_image(self):
+        return self.image.url

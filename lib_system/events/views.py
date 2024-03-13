@@ -1,7 +1,7 @@
 from django.http import JsonResponse
+import asyncio
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .models import Event
 from .serializers import EventSerializer
 from django.db.models import Q
 from .models import Event
@@ -34,11 +34,15 @@ class EventViewSet(viewsets.ModelViewSet):
         serializer = EventSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-    def create(self, request):
+    async def create(self, request):
         serializer = EventSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            event = serializer.save()
+
+            # Асинхронное ожидание в течение 60 секунд
+            await asyncio.sleep(60)
+
+            return Response(EventSerializer(event).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
